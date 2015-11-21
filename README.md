@@ -1,6 +1,6 @@
 # Comedian – .Net Actor Library
 
-_Comedian_s live in a _Sketch_ of multiple _StoryLine_s and well oiled _Joke_s.
+*Comedian*s live in a *Sketch* of multiple *StoryLine*s and well oiled *Joke*s.
 
 Or more seriously, **Comedian** provides a **nearly lock-free** actor library with **fine-tunable worker threads**.
 
