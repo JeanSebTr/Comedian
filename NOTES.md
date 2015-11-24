@@ -82,3 +82,11 @@ OK, so I've learn a lot about .Net threading utilities… Mostly that I should t
 And that I should concentrate on making sure that each actor individually
 and efficiently process its messages sequentially in a non-reentrant way.
 
+…
+
+I decided to completely change were I was going with the project.
+I'll make a [Fody](https://github.com/Fody/Fody) Addin that will make any class thread-safe.
+
+
+Made a first implementation of the `ActorCore` mixin that will be included in each actor class.
+Next step will be to do the IL Weaving.
