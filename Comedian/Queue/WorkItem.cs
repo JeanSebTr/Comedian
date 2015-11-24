@@ -18,7 +18,7 @@ namespace Comedian.Queue
 			_method = method;
 			_arguments = arguments;
 
-			Interlocked.Increment (ref _actor._mailboxSize);
+			//Interlocked.Increment (ref _actor._mailboxSize);
 		}
 
 		public Task<TResult> Task
@@ -28,16 +28,13 @@ namespace Comedian.Queue
 
 		public IDispatchQueue SelectDispatchQueue (IDispatchQueue candidate)
 		{
-			var oldQueue = Interlocked.CompareExchange<IDispatchQueue> (ref _actor._currentQueue, candidate, DispatchQueue.Empty);
-			return oldQueue == DispatchQueue.Empty ? candidate : oldQueue;
+			return candidate;
 		}
 
 		public void Execute()
 		{
 			var result = _method.Invoke (_actor._actor, _arguments);
 
-			if (Interlocked.Decrement (ref _actor._mailboxSize) == 0)
-				Interlocked.Exchange<IDispatchQueue> (ref _actor._currentQueue, DispatchQueue.Empty);
 		}
 	}
 

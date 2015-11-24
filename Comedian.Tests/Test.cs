@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System.Reflection;
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Comedian.Tests
 {
@@ -40,6 +41,7 @@ namespace Comedian.Tests
 		{
 			Int32 num = 0;
 			Interlocked.Increment (ref num).Should().Be(1);
+			Interlocked.Decrement (ref num).Should ().Be (0);
 		}
 
 		private interface IInterfaceType

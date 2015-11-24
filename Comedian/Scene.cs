@@ -1,31 +1,69 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Reflection;
-using Comedian.Queue;
+﻿using System.Collections.Concurrent;
 using System.Threading;
+using Comedian.Queue;
+using System;
+using Comedian.Threading;
 
 namespace Comedian
 {
-	public class Scene
+	public class Scene : SynchronizationContext
 	{
-		private readonly IDispatchQueue _queue;
+		private readonly IThreadingStrategy _strategy;
 
-		public Scene ()
+		//private delegate void ProcessWorkItem()
+
+		private ConcurrentQueue<Action> _processingQueue = new ConcurrentQueue<Action>();
+		private Int32 _processingQueueSize = 0;
+
+		public Scene (IThreadingStrategy strategy)
 		{
-			_queue = new DispatchQueue ();
+			_strategy = strategy;
 		}
 
-		internal void Dispatch(IWorkItem workItem)
+		internal void Process(Actor actor)
 		{
-			var queue = GetNextQueue ();
-
-			queue = workItem.SelectDispatchQueue (queue);
-			queue.Dispatch (workItem);
+			//base.Post ();
 		}
 
-		private IDispatchQueue GetNextQueue()
+		public override void Post (SendOrPostCallback callback, object state)
 		{
-			return _queue;
+			_processingQueue.Enqueue (() => callback (state));
+		}
+
+		public override void Send (SendOrPostCallback callback, object state)
+		{
+			using(var semaphore = new SemaphoreSlim(0, 1))
+			{
+				Exception forwardedException = null;
+				Post(s => {
+					try{
+						callback(s);
+					}
+					catch(Exception e)
+					{
+						forwardedException = e;
+					}
+					finally{
+						semaphore.Release(1);
+					}
+				}, state);
+
+				semaphore.Wait ();
+
+				if (forwardedException != null)
+					throw forwardedException;
+			}
+		}
+
+		private void RunProcessingThread(IThread thread)
+		{
+			Action action;
+			while(_strategy.TryDequeueForThread(_processingQueue, thread, out action))
+			{
+				//try{ action(); }
+
+			}
+
 		}
 	}
 }

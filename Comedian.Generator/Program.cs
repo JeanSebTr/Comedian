@@ -28,7 +28,7 @@ namespace Comedian.Generator
 
 		public static TActor GetActorProxy<TActor>(TActor actor)
 		{
-			
+			return default(TActor);
 		}
 	}
 

@@ -48,4 +48,10 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Comedian\Comedian.csproj">
+      <Project>{78CE43D9-ABD9-4800-A82A-A73E65C341D1}</Project>
+      <Name>Comedian</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

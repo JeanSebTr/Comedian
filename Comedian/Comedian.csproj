@@ -36,9 +36,16 @@
     <Compile Include="Queue\IDispatchQueue.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="Queue\WorkItem.cs" />
+    <Compile Include="IDispatcher.cs" />
+    <Compile Include="Threading\IThreadManager.cs" />
+    <Compile Include="Threading\IThread.cs" />
+    <Compile Include="Threading\IThreadingStrategy.cs" />
+    <Compile Include="Threading\StategyDecision.cs" />
+    <Compile Include="Threading\SingleThreadStrategy.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Queue\" />
+    <Folder Include="Threading\" />
   </ItemGroup>
 </Project>

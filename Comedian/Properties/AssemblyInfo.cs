@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 // Change them to the values specific to your project.
 
 [assembly: AssemblyTitle ("Comedian")]
-[assembly: AssemblyDescription ("")]
+[assembly: AssemblyDescription (".Net Actor Library")]
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("")]
 [assembly: AssemblyProduct ("")]
@@ -26,3 +26,4 @@ using System.Runtime.CompilerServices;
 //[assembly: AssemblyKeyFile("")]
 
 [assembly: InternalsVisibleTo("Comedian.Generator")]
+[assembly: InternalsVisibleTo("Comedian.Tests")]
