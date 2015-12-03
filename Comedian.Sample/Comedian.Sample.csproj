@@ -3,10 +3,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{70999162-56C2-4832-B9F2-3AE35AB70813}</ProjectGuid>
+    <ProjectGuid>{F04DA81A-3C2F-40F3-873F-18A8C933364A}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Comedian.Tests</RootNamespace>
-    <AssemblyName>Comedian.Tests</AssemblyName>
+    <RootNamespace>Comedian.Sample</RootNamespace>
+    <AssemblyName>Comedian.Sample</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -29,37 +29,25 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.3.0.0\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="NSubstitute">
-      <HintPath>..\packages\NSubstitute.1.9.2.0\lib\net45\NSubstitute.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentAssertions.Core">
-      <HintPath>..\packages\FluentAssertions.4.1.0\lib\net45\FluentAssertions.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentAssertions">
-      <HintPath>..\packages\FluentAssertions.4.1.0\lib\net45\FluentAssertions.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Test.cs" />
-    <Compile Include="ActorCore\SyncCall.cs" />
-    <Compile Include="ActorCore\FakeActor.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
+  <Import Project="..\packages\Fody.1.29.3\build\portable-net+sl+win+wpa+wp\Fody.targets" Condition="Exists('..\packages\Fody.1.29.3\build\portable-net+sl+win+wpa+wp\Fody.targets')" />
   <ItemGroup>
     <ProjectReference Include="..\Comedian\Comedian.csproj">
       <Project>{78CE43D9-ABD9-4800-A82A-A73E65C341D1}</Project>
       <Name>Comedian</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Comedian.Fody\Comedian.Fody.csproj">
+      <Project>{211860C9-3E5E-422E-B3D4-34DA3275015E}</Project>
+      <Name>Comedian.Fody</Name>
+      <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ActorCore\" />
+    <None Include="FodyWeavers.xml" />
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
