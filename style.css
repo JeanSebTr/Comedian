@@ -1,19 +1,32 @@
 
 html {
   box-sizing: border-box;
+  min-height: 100%;
+  display: flex;
 }
 *, *:before, *:after {
   box-sizing: inherit;
 }
 
 body {
-	max-width: 900px;
+	max-width: 55em;
 	width:100%;
 
-	padding: 15px;
-	margin: auto;
+	padding: 1em;
+	margin: 0 auto;
 
 	font-family: Hack;
+	display: flex;
+	flex-direction: column;
+}
+
+body > * {
+	flex: 1 0 100%;
+}
+
+body > footer {
+	padding: 0.4em;
+	flex: 0 1 2em;
 }
 
 .site-header h1 {
@@ -30,4 +43,12 @@ body {
 
 	padding-bottom: .5em;
 	display: block;
+}
+
+.main-content {
+	padding-bottom: 1em;
+}
+
+body > footer, article {
+	border-top: .1em solid black;
 }
