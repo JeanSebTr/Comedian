@@ -48,6 +48,7 @@
     <Compile Include="Test.cs" />
     <Compile Include="ActorCore\SyncCall.cs" />
     <Compile Include="ActorCore\FakeActor.cs" />
+    <Compile Include="FluentAssertionsExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
