@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% include meta.html %}
+  </head>
+  <body>
+    {% include header.html %}
+    <section class="main-content">
+      
+    </section>
+    <section class="main-post">
+      {% for post in site.posts limit:1 %}
+        <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
+        {{ post.excerpt }}
+      {% endfor %}
+    </section>
+    <section class="recent-posts">
+      <h2>Previous posts</h2>
+      <ul>
+      {% for post in site.posts offset:1 limit:5 %}
+        <li><a href="{{ post.url }}">{{ post.title }}</a></li>
+      {% endfor %}
+      </ul>
+    </section>
+  </body>
+</html>
