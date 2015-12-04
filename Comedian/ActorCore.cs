@@ -89,12 +89,14 @@ namespace Comedian
 
 		public void ProcessNext()
 		{
-			Action action;
-			if (Volatile.Read(ref _mailboxSize) == 0 || !_mailbox.TryDequeue (out action))
-				return;
+			if (Volatile.Read (ref _mailboxSize) == 0)
+				throw new InvalidOperationException ();
 
+			Action action;
+			if(_mailbox.TryDequeue (out action))
+				action ();
+		
 			Interlocked.Decrement (ref _mailboxSize);
-			action ();
 		}
 
 		private bool ShouldRunSynchronously()
