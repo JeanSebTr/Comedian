@@ -27,3 +27,7 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Comedian.Fody")]
 [assembly: InternalsVisibleTo("Comedian.Tests")]
+
+#if DEBUG
+[assembly: InternalsVisibleTo("Weavers")]
+#endif

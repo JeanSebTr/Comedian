@@ -11,10 +11,7 @@ namespace Comedian
 	{
 		[ThreadStatic]
 		protected static ActorCore _currentlyExecuting = null;
-	}
 
-	internal class ActorCore<TActor> : ActorCore
-	{
 		private readonly ConcurrentQueue<Action> _mailbox = new ConcurrentQueue<Action> ();
 		private Int32 _mailboxSize = 0;
 

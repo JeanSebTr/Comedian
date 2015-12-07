@@ -59,6 +59,10 @@
       <Project>{78CE43D9-ABD9-4800-A82A-A73E65C341D1}</Project>
       <Name>Comedian</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Comedian.Sample\Comedian.Sample.csproj">
+      <Project>{F04DA81A-3C2F-40F3-873F-18A8C933364A}</Project>
+      <Name>Comedian.Sample</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ActorCore\" />

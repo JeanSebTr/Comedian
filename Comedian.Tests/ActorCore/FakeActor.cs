@@ -5,7 +5,7 @@ namespace Comedian.Tests.ActorCore
 	[Actor]
 	public class FakeActor
 	{
-		internal ActorCore<FakeActor> _actorCore = new ActorCore<FakeActor>();
+		internal Comedian.ActorCore _actorCore = new Comedian.ActorCore();
 
 		public FakeActor ()
 		{

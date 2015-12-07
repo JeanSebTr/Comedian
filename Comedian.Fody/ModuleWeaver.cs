@@ -43,7 +43,7 @@ namespace Comedian.Fody
 			var actorTypes = module.Types.Where(HasActorAttribute);
 			foreach(var actorType in actorTypes)
 			{
-				TransformType (actorType);
+				new ActorWeaver (module, actorType).Apply ();
 			}
 		}
 
@@ -56,12 +56,6 @@ namespace Comedian.Fody
 		private bool HasActorAttribute(TypeDefinition typeDefinition)
 		{
 			return typeDefinition.CustomAttributes.Any (attr => attr.AttributeType.FullName == ActorAttrType.FullName);
-		}
-
-		private void TransformType(TypeDefinition actorType)
-		{
-			LogWarning (actorType.FullName + " 7 lol");
-			
 		}
 	}
 }
