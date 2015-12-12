@@ -46,7 +46,14 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ModuleWeaver.cs" />
-    <Compile Include="ActorWeaver.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="Weavers\ActorWeaver.cs" />
+    <Compile Include="Weavers\AsyncMethodWeaver.cs" />
+    <Compile Include="Weavers\AsyncStateMachineWeaver.cs" />
+    <Compile Include="IEngine.cs" />
+    <Compile Include="Weavers\IWeaver.cs" />
+    <Compile Include="Engines\ModuleEngine.cs" />
+    <Compile Include="Engines\BaseEngine.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -57,5 +64,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Weavers\" />
+    <Folder Include="Engines\" />
   </ItemGroup>
 </Project>

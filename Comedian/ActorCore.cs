@@ -15,29 +15,33 @@ namespace Comedian
 		private readonly ConcurrentQueue<Action> _mailbox = new ConcurrentQueue<Action> ();
 		private Int32 _mailboxSize = 0;
 
-		public async Task<int> Lol()
+		public async Task<int> Lol(int i)
 		{
 			await Task.Delay (1000);
 
-			return 42;
+			return 42 - i;
 		}
 
 		public void Enqueue<TStateMachine>(AsyncVoidMethodBuilder builder, TStateMachine stateMachine)
 			where TStateMachine : IAsyncStateMachine
 		{
-			EnqueueAsync (() => builder.Start (ref stateMachine));
+			_mailbox.Enqueue (() => builder.Start (ref stateMachine));
 		}
 
-		public void Enqueue<TStateMachine>(AsyncTaskMethodBuilder builder, TStateMachine stateMachine)
+		public Task Enqueue<TStateMachine>(AsyncTaskMethodBuilder builder, TStateMachine stateMachine)
 			where TStateMachine : IAsyncStateMachine
 		{
-			EnqueueAsync (() => builder.Start (ref stateMachine));
+			var task = builder.Task;
+			_mailbox.Enqueue (() => builder.Start (ref stateMachine));
+			return task;
 		}
 
-		public void Enqueue<TResult, TStateMachine>(AsyncTaskMethodBuilder<TResult> builder, TStateMachine stateMachine)
+		public Task<TResult> Enqueue<TResult, TStateMachine>(AsyncTaskMethodBuilder<TResult> builder, TStateMachine stateMachine)
 			where TStateMachine : IAsyncStateMachine
 		{
-			EnqueueAsync (() => builder.Start (ref stateMachine));
+			var task = builder.Task;
+			_mailbox.Enqueue (() => builder.Start (ref stateMachine));
+			return task;
 		}
 
 		internal void EnqueueAsync(Action action)

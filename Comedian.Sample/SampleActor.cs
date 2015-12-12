@@ -18,6 +18,27 @@ namespace Comedian.Sample
 		{
 			_semaphore.Wait ();
 		}
+
+		internal bool Lol()
+		{
+			return false;
+		}
+
+		[Actor]
+		protected class InnerActor
+		{
+			private readonly Action _t;
+
+			public InnerActor()
+			{
+				_t = Hello;
+			}
+
+			private void Hello()
+			{
+				//say hi!
+			}
+		}
 	}
 }
 
