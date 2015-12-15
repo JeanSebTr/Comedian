@@ -3,13 +3,12 @@ using Mono.Cecil;
 using System.Linq;
 using Mono.Cecil.Cil;
 using System.Collections.Generic;
+using Comedian.Fody.Engines;
 
 namespace Comedian.Fody.Weavers
 {
 	public class ActorWeaver : IWeaver
 	{
-		private const string AsyncStateMachineAttribute = "System.Runtime.CompilerServices.AsyncStateMachineAttribute";
-
 		private readonly IEngine _engine;
 		private readonly TypeDefinition _weavedType;
 
@@ -29,9 +28,8 @@ namespace Comedian.Fody.Weavers
 		private FieldDefinition _actorMixinField;
 		private void CreateMixinField()
 		{
-			const FieldAttributes mixinFieldAttr = FieldAttributes.InitOnly | FieldAttributes.Private;
 			var actorType = _engine.Get<ActorCore> ();
-			_actorMixinField = new FieldDefinition ("Comedian<ActorCore>", mixinFieldAttr, actorType);
+			_actorMixinField = new FieldDefinition (Constants.MixinFieldName, Constants.MixinFieldAttr, actorType);
 			_weavedType.Fields.Add (_actorMixinField);
 
 			var actorCtor = _weavedType.Methods.Single (m => m.IsConstructor);

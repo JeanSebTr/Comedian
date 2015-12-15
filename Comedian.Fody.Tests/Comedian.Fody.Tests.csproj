@@ -3,10 +3,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{70999162-56C2-4832-B9F2-3AE35AB70813}</ProjectGuid>
+    <ProjectGuid>{920B80D2-61D4-4C8C-B3B2-30CC4027A112}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Comedian.Tests</RootNamespace>
-    <AssemblyName>Comedian.Tests</AssemblyName>
+    <RootNamespace>Comedian.Fody.Tests</RootNamespace>
+    <AssemblyName>Comedian.Fody.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -29,42 +29,40 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="NSubstitute">
-      <HintPath>..\packages\NSubstitute.1.9.2.0\lib\net45\NSubstitute.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentAssertions.Core">
-      <HintPath>..\packages\FluentAssertions.4.1.0\lib\net45\FluentAssertions.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentAssertions">
-      <HintPath>..\packages\FluentAssertions.4.1.0\lib\net45\FluentAssertions.dll</HintPath>
-    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.3.0.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Test.cs" />
-    <Compile Include="ActorCore\SyncCall.cs" />
-    <Compile Include="ActorCore\FakeActor.cs" />
-    <Compile Include="FluentAssertionsExtensions.cs" />
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\packages\FodyCecil.1.29.2\lib\net40\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb">
+      <HintPath>..\packages\FodyCecil.1.29.2\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb">
+      <HintPath>..\packages\FodyCecil.1.29.2\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks">
+      <HintPath>..\packages\FodyCecil.1.29.2\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
+    </Reference>
+    <Reference Include="NSubstitute">
+      <HintPath>..\packages\NSubstitute.1.9.2.0\lib\net45\NSubstitute.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Comedian.Fody\Comedian.Fody.csproj">
+      <Project>{211860C9-3E5E-422E-B3D4-34DA3275015E}</Project>
+      <Name>Comedian.Fody</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Comedian\Comedian.csproj">
       <Project>{78CE43D9-ABD9-4800-A82A-A73E65C341D1}</Project>
       <Name>Comedian</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Comedian.Sample\Comedian.Sample.csproj">
-      <Project>{F04DA81A-3C2F-40F3-873F-18A8C933364A}</Project>
-      <Name>Comedian.Sample</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ActorCore\" />
+    <Compile Include="EnginesTests.cs" />
   </ItemGroup>
 </Project>

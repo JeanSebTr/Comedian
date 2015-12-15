@@ -1,18 +1,25 @@
 ﻿using System;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+using Mono.Cecil.Rocks;
+using System.Linq;
+using Comedian.Fody.Engines;
 
 namespace Comedian.Fody.Weavers
 {
-	public class AsyncMethodWeaver
+	public class AsyncMethodWeaver : IWeaver
 	{
 		private readonly IEngine _engine;
 		private readonly MethodDefinition _method;
+		private readonly FieldDefinition _actorMixin;
+		private readonly FieldDefinition _stateMachineMixin;
 
-		public AsyncMethodWeaver (IEngine engine, MethodDefinition method)
+		public AsyncMethodWeaver (IEngine engine, MethodDefinition method, FieldDefinition actorMixin, FieldDefinition stateMachineMixin)
 		{
 			_engine = engine;
 			_method = method;
+			_actorMixin = actorMixin;
+			_stateMachineMixin = stateMachineMixin;
 		}
 		//			IL_0000: ldloca.s 0
 		//			IL_0002: ldarg.1
@@ -43,16 +50,130 @@ namespace Comedian.Fody.Weavers
 		//			IL_0028: ret
 		public void Apply()
 		{
-
+			var endOfStateMachineInit = GetEndOfStateMachineInitialization (_method.Body);
+			var stateMachineStarting = endOfStateMachineInit.Next;
 
 			var ilp = _method.Body.GetILProcessor ();
-			//ilp.
+			ilp.Body.SimplifyMacros ();
+
+			var last = AddSetActorMixin (ilp, endOfStateMachineInit);
+			last = AddConditionGoto (ilp, last, stateMachineStarting);
+			AddEnqueueOps (ilp, last);
+
+			ilp.Body.OptimizeMacros ();
+		}
+
+		/// <summary>
+		/// stateMachine.mixin = this.mixin;
+		/// </summary>
+		/// <returns>The last instruction added</returns>
+		/// <param name="ilp">Il processor</param>
+		/// <param name="after">Add instructions after this one</param>
+		private Instruction AddSetActorMixin(ILProcessor ilp, Instruction after)
+		{
+			var loadStateMachineVar = ilp.Create (OpCodes.Ldloca_S, ilp.Body.Variables[0]);
+			var loadThis = ilp.Create (OpCodes.Ldarg_0);
+			var loadField = ilp.Create (OpCodes.Ldfld, _actorMixin);
+			var storeField = ilp.Create (OpCodes.Stfld, _stateMachineMixin);
+
+			ilp.InsertAfter (after, loadStateMachineVar);
+			ilp.InsertAfter (loadStateMachineVar, loadThis);
+			ilp.InsertAfter (loadThis, loadField);
+			ilp.InsertAfter (loadField, storeField);
+
+			return storeField;
+		}
+
+		private Instruction AddConditionGoto (ILProcessor ilp, Instruction last, Instruction stateMachineStarting)
+		{
+			var shouldRunSynchronouslyMethod = _engine.GetMethod<Func<ActorCore, bool>> (a => a.ShouldRunSynchronously ());
+
+			var loadThis = ilp.Create (OpCodes.Ldarg_0);
+			var loadField = ilp.Create (OpCodes.Ldfld, _actorMixin);
+			var callMethod = ilp.Create (OpCodes.Call, shouldRunSynchronouslyMethod);
+			var gotoNext = ilp.Create (OpCodes.Brtrue_S, stateMachineStarting);
+
+			ilp.InsertAfter (last, loadThis);
+			ilp.InsertAfter (loadThis, loadField);
+			ilp.InsertAfter (loadField, callMethod);
+			ilp.InsertAfter (callMethod, gotoNext);
+
+			return gotoNext;
+		}
+
+		private Instruction AddEnqueueOps (ILProcessor ilp, Instruction last)
+		{
+			var enqueueMethod = GetEnqueueMethodReference();
+			var endInstruction = ilp.Body.Instructions.Last ();
+
+			var loadThis = ilp.Create (OpCodes.Ldarg_0);
+			var loadMixinField = ilp.Create (OpCodes.Ldfld, _actorMixin);
+			var loadStateMachineVar_1 = ilp.Create (OpCodes.Ldloca_S, ilp.Body.Variables[0]);
+			var loadBuilderField = ilp.Create (OpCodes.Ldfld, GetBuilderField ());
+			var loadStateMachineVar_2 = ilp.Create (OpCodes.Ldloca_S, ilp.Body.Variables[0]);
+			var callMethod = ilp.Create (OpCodes.Call, enqueueMethod);
+			var gotoEnd = ilp.Create (OpCodes.Br, endInstruction);
+
+			ilp.InsertAfter (last, loadThis);
+			ilp.InsertAfter (loadThis, loadMixinField);
+			ilp.InsertAfter (loadMixinField, loadStateMachineVar_1);
+			ilp.InsertAfter (loadStateMachineVar_1, loadBuilderField);
+			ilp.InsertAfter (loadBuilderField, loadStateMachineVar_2);
+			ilp.InsertAfter (loadStateMachineVar_2, callMethod);
+			ilp.InsertAfter (callMethod, gotoEnd);
+
+			return gotoEnd;
+		}
+
+		private MethodReference GetEnqueueMethodReference()
+		{
+			var actorMixinType = _engine.Get<ActorCore> ().Resolve();
+
+			MethodReference enqueueMethod = actorMixinType.Methods.Single (IsCorrespondingEnqueueMethod);
+			enqueueMethod = _engine.Get (enqueueMethod);
+
+			var methodInstance = new GenericInstanceMethod (enqueueMethod);
+
+			if(_method.ReturnType.IsGenericInstance)
+			{
+				var taskReturnArg = (_method.ReturnType as GenericInstanceType).GenericArguments.First ();
+				methodInstance.GenericArguments.Add (taskReturnArg);
+			}
+
+			var stateMachineType = GetStateMachineType ();
+			methodInstance.GenericArguments.Add (stateMachineType);
+
+			return methodInstance;
+		}
+
+		private bool IsCorrespondingEnqueueMethod(MethodDefinition method)
+		{
+			if (method.Name != "Enqueue")
+				return false;
+
+			if (_method.ReturnType.IsGenericInstance && method.GenericParameters.Count == 2)
+				return true;
+
+			return _method.ReturnType.FullName == method.ReturnType.FullName;
+		}
+
+		private FieldReference GetBuilderField()
+		{
+			var stateMachineType = GetStateMachineType().Resolve();
+
+			return stateMachineType.Fields.Single (f => f.FieldType.Namespace == "System.Runtime.CompilerServices" && f.FieldType.Name.StartsWith("Async", StringComparison.Ordinal));
+		}
+
+		private TypeReference GetStateMachineType()
+		{
+			var stateMachineAttr = _method.CustomAttributes.Single (attr => attr.AttributeType.FullName == Constants.AsyncStateMachineAttribute);
+			return stateMachineAttr.ConstructorArguments.First ().Value as TypeReference;
 		}
 
 		private Instruction GetEndOfStateMachineInitialization(MethodBody body)
 		{
 			var instructions = body.Instructions;
-			for(int i=instructions.Count; i>=0; i--)
+			for(int i=instructions.Count - 1; i>=0; i--)
 			{
 				if (instructions [i].OpCode == OpCodes.Stfld)
 					return instructions [i];

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
 using Comedian.Fody.Weavers;
+using Comedian.Fody.Engines;
 
 namespace Comedian.Fody
 {
@@ -27,10 +28,10 @@ namespace Comedian.Fody
 			var logger = new Logger (LogInfo, LogWarning, LogError);
 			var engine = new ModuleEngine (ModuleDefinition, logger);
 
-			var actorTypes = GetAllTypes(ModuleDefinition).Where(HasActorAttribute);
+			var actorTypes = ModuleDefinition.GetTypes ().Where(HasActorAttribute);
 			foreach(var actorType in actorTypes)
 			{
-				new ActorWeaver (logger as IEngine, actorType).Apply ();
+				engine.GetWeaver(actorType).Apply ();
 			}
 		}
 
@@ -43,11 +44,6 @@ namespace Comedian.Fody
 		private bool HasActorAttribute(TypeDefinition typeDefinition)
 		{
 			return typeDefinition.CustomAttributes.Any (attr => attr.AttributeType.FullName == ActorAttrType.FullName);
-		}
-
-		private IEnumerable<TypeDefinition> GetAllTypes(ModuleDefinition module)
-		{
-			return module.GetTypes ();
 		}
 	}
 }

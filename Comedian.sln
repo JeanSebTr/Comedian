@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Comedian.Fody", "Comedian.F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Comedian.Sample", "Comedian.Sample\Comedian.Sample.csproj", "{F04DA81A-3C2F-40F3-873F-18A8C933364A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Comedian.Fody.Tests", "Comedian.Fody.Tests\Comedian.Fody.Tests.csproj", "{920B80D2-61D4-4C8C-B3B2-30CC4027A112}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{78CE43D9-ABD9-4800-A82A-A73E65C341D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78CE43D9-ABD9-4800-A82A-A73E65C341D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78CE43D9-ABD9-4800-A82A-A73E65C341D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{920B80D2-61D4-4C8C-B3B2-30CC4027A112}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{920B80D2-61D4-4C8C-B3B2-30CC4027A112}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{920B80D2-61D4-4C8C-B3B2-30CC4027A112}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{920B80D2-61D4-4C8C-B3B2-30CC4027A112}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F04DA81A-3C2F-40F3-873F-18A8C933364A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F04DA81A-3C2F-40F3-873F-18A8C933364A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F04DA81A-3C2F-40F3-873F-18A8C933364A}.Release|Any CPU.ActiveCfg = Release|Any CPU

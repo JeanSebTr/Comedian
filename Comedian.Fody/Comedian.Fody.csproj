@@ -50,10 +50,12 @@
     <Compile Include="Weavers\ActorWeaver.cs" />
     <Compile Include="Weavers\AsyncMethodWeaver.cs" />
     <Compile Include="Weavers\AsyncStateMachineWeaver.cs" />
-    <Compile Include="IEngine.cs" />
     <Compile Include="Weavers\IWeaver.cs" />
     <Compile Include="Engines\ModuleEngine.cs" />
     <Compile Include="Engines\BaseEngine.cs" />
+    <Compile Include="Engines\ActorEngine.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Engines\IEngine.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

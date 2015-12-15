@@ -1,14 +1,25 @@
 ﻿using System;
 using Mono.Cecil;
+using Comedian.Fody.Engines;
 
 namespace Comedian.Fody.Weavers
 {
-	public class AsyncStateMachineWeaver
+	public class AsyncStateMachineWeaver : IWeaver
 	{
-		public AsyncStateMachineWeaver ()
-		{
+		private readonly IEngine _engine;
+		private readonly TypeDefinition _stateMachineType;
+		private readonly FieldDefinition _mixinField;
 
-			//var m = new MethodReference()
+		public AsyncStateMachineWeaver(IEngine engine, TypeDefinition stateMachineType, FieldDefinition actorMixin)
+		{
+			_engine = engine;
+			_stateMachineType = stateMachineType;
+			_mixinField = actorMixin;
+		}
+
+		public void Apply ()
+		{
+			_stateMachineType.Fields.Add (_mixinField);
 		}
 	}
 }

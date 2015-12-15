@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Comedian.Sample
 {
@@ -9,36 +10,27 @@ namespace Comedian.Sample
 		internal readonly SemaphoreSlim _semaphore = new SemaphoreSlim(0);
 		internal Int32 _called = 0;
 
-		public void SyncMethod()
+		public async Task<int> Lol()
 		{
-			Interlocked.Increment (ref _called);
+			await Task.Delay (200);
+
+			return 11;
 		}
 
-		public void BlockSyncMethod()
-		{
-			_semaphore.Wait ();
-		}
-
-		internal bool Lol()
-		{
-			return false;
-		}
-
-		[Actor]
-		protected class InnerActor
-		{
-			private readonly Action _t;
-
-			public InnerActor()
-			{
-				_t = Hello;
-			}
-
-			private void Hello()
-			{
-				//say hi!
-			}
-		}
+//		public void SyncMethod()
+//		{
+//			Interlocked.Increment (ref _called);
+//		}
+//
+//		public void BlockSyncMethod()
+//		{
+//			_semaphore.Wait ();
+//		}
+//
+//		internal bool Lol()
+//		{
+//			return false;
+//		}
 	}
 }
 

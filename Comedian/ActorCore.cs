@@ -15,13 +15,6 @@ namespace Comedian
 		private readonly ConcurrentQueue<Action> _mailbox = new ConcurrentQueue<Action> ();
 		private Int32 _mailboxSize = 0;
 
-		public async Task<int> Lol(int i)
-		{
-			await Task.Delay (1000);
-
-			return 42 - i;
-		}
-
 		public void Enqueue<TStateMachine>(AsyncVoidMethodBuilder builder, TStateMachine stateMachine)
 			where TStateMachine : IAsyncStateMachine
 		{
@@ -100,7 +93,7 @@ namespace Comedian
 			Interlocked.Decrement (ref _mailboxSize);
 		}
 
-		private bool ShouldRunSynchronously()
+		internal bool ShouldRunSynchronously()
 		{
 			const Int32 FIRST_ITEM_ADDED = 1;
 			return Interlocked.Increment (ref _mailboxSize) == FIRST_ITEM_ADDED;
